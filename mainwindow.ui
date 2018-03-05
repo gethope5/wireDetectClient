@@ -1,0 +1,726 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1466</width>
+    <height>869</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_5">
+    <item row="0" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QGroupBox" name="groupBox_3">
+        <property name="minimumSize">
+         <size>
+          <width>300</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="title">
+         <string/>
+        </property>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="1" column="15">
+          <widget class="QPushButton" name="pbtnDetailUpdate">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-image: url(:/images/images/lableBk.png);</string>
+           </property>
+           <property name="text">
+            <string>确定</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="7">
+          <widget class="QLabel" name="label_18">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>超限标准</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="8">
+          <widget class="QLineEdit" name="lnbOverCur">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>30</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>30</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(213, 255, 239);</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="9">
+          <widget class="QLabel" name="label_19">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>A</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QCheckBox" name="overflow">
+           <property name="font">
+            <font>
+             <pointsize>15</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-image: url(:/images/images/lableBk.png);</string>
+           </property>
+           <property name="text">
+            <string>超限数据</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QPushButton" name="pbtnReshData">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-image: url(:/images/images/lableBk.png);</string>
+           </property>
+           <property name="text">
+            <string>刷新数据</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QCheckBox" name="dataPic">
+           <property name="font">
+            <font>
+             <pointsize>15</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-image: url(:/images/images/lableBk.png);</string>
+           </property>
+           <property name="text">
+            <string>数据曲线图</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QCheckBox" name="devieceStaturs">
+           <property name="font">
+            <font>
+             <pointsize>15</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-image: url(:/images/images/lableBk.png);</string>
+           </property>
+           <property name="text">
+            <string>设备状态</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="14">
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>37</width>
+             <height>17</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="2">
+          <widget class="QLabel" name="label_15">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>选择设备</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QComboBox" name="cmbDeviceNo_2">
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>0</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="13">
+          <widget class="QDateEdit" name="date">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-image: url(:/images/images/lableBk.png);</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+           <property name="buttonSymbols">
+            <enum>QAbstractSpinBox::UpDownArrows</enum>
+           </property>
+           <property name="calendarPopup">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="4">
+          <widget class="QLabel" name="label_17">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>线路</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="5">
+          <widget class="QComboBox" name="cmbLine">
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>100</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="1" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_7">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QGroupBox" name="gbDetail">
+          <property name="minimumSize">
+           <size>
+            <width>600</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>采集数据</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_6">
+           <item row="0" column="0">
+            <widget class="multTableFrm" name="tbDetail" native="true"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>超限数据</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <item row="0" column="0">
+            <widget class="QTableView" name="tbOverData">
+             <property name="styleSheet">
+              <string notr="true">font: 75 12pt &quot;楷体&quot;;
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(129, 131, 21, 255), stop:0.463277 rgba(129, 170, 80, 255), stop:1 rgba(255, 255, 255, 255));</string>
+             </property>
+             <property name="sortingEnabled">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item row="2" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>250</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>设备信息</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="4" column="4" colspan="3">
+          <widget class="QLineEdit" name="line2"/>
+         </item>
+         <item row="4" column="7">
+          <widget class="QLabel" name="label_11">
+           <property name="text">
+            <string>线路3</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="8" colspan="2">
+          <widget class="QLineEdit" name="line3"/>
+         </item>
+         <item row="4" column="10">
+          <widget class="QLabel" name="label_12">
+           <property name="text">
+            <string>线路4</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="11">
+          <widget class="QLineEdit" name="line4"/>
+         </item>
+         <item row="4" column="12">
+          <widget class="QLabel" name="label_13">
+           <property name="text">
+            <string>线路5</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="13">
+          <widget class="QLineEdit" name="line5"/>
+         </item>
+         <item row="4" column="14">
+          <widget class="QLabel" name="label_14">
+           <property name="text">
+            <string>线路6</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="15" colspan="2">
+          <widget class="QLineEdit" name="line6"/>
+         </item>
+         <item row="2" column="20">
+          <widget class="QPushButton" name="ptnbDeviceInfoUpdate">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>更新</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0" colspan="22">
+          <widget class="QTableView" name="tbTableInfo">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 75 12pt &quot;楷体&quot;;
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(129, 131, 21, 255), stop:0.463277 rgba(129, 170, 80, 255), stop:1 rgba(255, 255, 255, 255));</string>
+           </property>
+           <property name="sortingEnabled">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0" colspan="2">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>设备编号</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2" colspan="3">
+          <widget class="QLineEdit" name="lneDeviceNo"/>
+         </item>
+         <item row="2" column="5">
+          <widget class="QLabel" name="label_16">
+           <property name="text">
+            <string>设备简称</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="6" colspan="3">
+          <widget class="QLineEdit" name="lneDeviceAbbr"/>
+         </item>
+         <item row="2" column="9">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>所属路局</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="10" colspan="2">
+          <widget class="QLineEdit" name="lneDepartment"/>
+         </item>
+         <item row="2" column="13">
+          <widget class="QLabel" name="label_8">
+           <property name="text">
+            <string>安装位置</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="14" colspan="2">
+          <widget class="QLineEdit" name="lnePosition"/>
+         </item>
+         <item row="2" column="16" colspan="2">
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>132</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_9">
+           <property name="text">
+            <string>线路1</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1" colspan="2">
+          <widget class="QLineEdit" name="line1"/>
+         </item>
+         <item row="4" column="3">
+          <widget class="QLabel" name="label_10">
+           <property name="text">
+            <string>线路2</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="18">
+          <widget class="QPushButton" name="ptnbDeviceAdd">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>添加</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="19">
+          <widget class="QPushButton" name="ptnbDeviceDelete">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>删除</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="17" colspan="4">
+          <spacer name="horizontalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>69</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="3" column="0">
+     <widget class="QGroupBox" name="gbCurve">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>80</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>检测曲线</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QCheckBox" name="cb1">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(0, 125, 125);</string>
+           </property>
+           <property name="text">
+            <string>线路1</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cb2">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(0, 0, 255);</string>
+           </property>
+           <property name="text">
+            <string>线路2</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cb3">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(0, 255, 0);</string>
+           </property>
+           <property name="text">
+            <string>线路3</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cb4">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(0, 255, 255);</string>
+           </property>
+           <property name="text">
+            <string>线路4</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cb5">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(255, 0, 255);</string>
+           </property>
+           <property name="text">
+            <string>线路5</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cb6">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(255, 125, 0);</string>
+           </property>
+           <property name="text">
+            <string>线路6</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="0" column="1">
+        <widget class="QCustomPlot" name="dataWidget" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>2</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1466</width>
+     <height>23</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="deviceManager">
+   <property name="text">
+    <string>设备管理</string>
+   </property>
+   <property name="toolTip">
+    <string>管理控制相关的设备</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header>qcustomplot.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>multTableFrm</class>
+   <extends>QWidget</extends>
+   <header location="global">multtablefrm.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

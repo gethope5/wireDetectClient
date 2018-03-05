@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CDeviceManager</class>
+ <widget class="QMainWindow" name="CDeviceManager">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>500</width>
+    <height>755</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>500</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>500</width>
+    <height>1000</height>
+   </size>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>10</pointsize>
+    <weight>75</weight>
+    <bold>true</bold>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>设备管理器</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_4">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_13">
+      <item>
+       <widget class="QGroupBox" name="groupBox_3">
+        <property name="title">
+         <string/>
+        </property>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="1" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_10">
+           <item>
+            <widget class="QLabel" name="label_5">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>所属路局</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="devieceOwner">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="4" column="0">
+          <widget class="QPushButton" name="AddDeviece">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>请在上方输入设备相关信息后点击</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-image: url(:/images/images/fuck.jpg);</string>
+           </property>
+           <property name="text">
+            <string>添加设备</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_9">
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>设备编号</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="devieceNo_2">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="2" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_11">
+           <item>
+            <widget class="QLabel" name="label_7">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>安装位置</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="deviecePosition">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="3" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_12">
+           <item>
+            <widget class="QLabel" name="label_10">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>安装时间</string>
+             </property>
+            </widget>
+           </item>
+           <item alignment="Qt::AlignHCenter">
+            <widget class="QDateTimeEdit" name="dateTimeEdit">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+             <property name="dateTime">
+              <datetime>
+               <hour>0</hour>
+               <minute>0</minute>
+               <second>0</second>
+               <year>2000</year>
+               <month>1</month>
+               <day>1</day>
+              </datetime>
+             </property>
+             <property name="calendarPopup">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_2">
+        <property name="title">
+         <string/>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QLabel" name="label_6">
+           <property name="font">
+            <font>
+             <pointsize>13</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>需要删除的设备的编号：</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_2">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;在上方表格中选择设备所在行点击即可&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-image: url(:/images/images/fuck.jpg);</string>
+           </property>
+           <property name="text">
+            <string>删除设备</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QTableView" name="linesAliase">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="sortingEnabled">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton">
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-image: url(:/images/images/fuck.jpg);</string>
+      </property>
+      <property name="text">
+       <string>刷新</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="title">
+       <string>控制设备</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>设备编号</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="devieceNo"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QPushButton" name="savePower">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-image: url(:/images/images/fuck.jpg);</string>
+           </property>
+           <property name="text">
+            <string>全速运行</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="runFast">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-image: url(:/images/images/fuck.jpg);</string>
+           </property>
+           <property name="text">
+            <string>进入省电模式</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_8">
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <widget class="QSpinBox" name="tm"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="setTimeEescap">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-image: url(:/images/images/fuck.jpg);</string>
+             </property>
+             <property name="text">
+              <string>设置检测时间间隔</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QSpinBox" name="newNo"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="setNewNo">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-image: url(:/images/images/fuck.jpg);</string>
+             </property>
+             <property name="text">
+              <string>设置设备新编号</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_6">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QLabel" name="label_3">
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>电流预警值</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="warningVal"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <item>
+              <widget class="QLabel" name="label_4">
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>线路编号</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="lineNo"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QPushButton" name="setWarningVal">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-image: url(:/images/images/fuck.jpg);</string>
+             </property>
+             <property name="text">
+              <string>设置电流预警值</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_7">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <item>
+              <widget class="QLabel" name="label_8">
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>电流预警值</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="errVal"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_6">
+             <item>
+              <widget class="QLabel" name="label_9">
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>线路编号</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="errNo"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QPushButton" name="setErrVal">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-image: url(:/images/images/fuck.jpg);</string>
+             </property>
+             <property name="text">
+              <string>设置电流报警值</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QPushButton" name="setAllToZero">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-image: url(:/images/images/fuck.jpg);</string>
+         </property>
+         <property name="text">
+          <string>线路电流零点校准设置命令</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_9">
+         <item>
+          <widget class="QSpinBox" name="zeroLineNo"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="setLineZero">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-image: url(:/images/images/fuck.jpg);</string>
+           </property>
+           <property name="text">
+            <string>线路电流校准命令</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>500</width>
+     <height>23</height>
+    </rect>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
