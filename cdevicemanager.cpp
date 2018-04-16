@@ -1,4 +1,4 @@
-#include "cdevicemanager.h"
+﻿#include "cdevicemanager.h"
 #include "ui_cdevicemanager.h"
 #include <QPainter>
 #include <QDateTime>
@@ -242,7 +242,7 @@ void CDeviceManager::on_AddDeviece_clicked()
 
     if(!sqlQuery.exec())
     {
-        QMessageBox::information(this,QString::fromWCharArray(L"错误"),QString::fromWCharArray(L"添加设备失败\r\n设备编号已存在"));
+        QMessageBox::information(this,QString::fromWCharArray(L"错误"),QString::fromWCharArray(L"添加设备失败设备编号已存在"));
         return;
     }
 
@@ -250,7 +250,7 @@ void CDeviceManager::on_AddDeviece_clicked()
     sqlQuery.bindValue(0,no);
     if(!sqlQuery.exec())
     {
-        QMessageBox::information(this,QString::fromWCharArray(L"提示"),QString::fromWCharArray(L"添加设备失败\r\n已存在相同编号设备"));
+        QMessageBox::information(this,QString::fromWCharArray(L"提示"),QString::fromWCharArray(L"添加设备失败已存在相同编号设备"));
     }
     for(int lineNo = 0;lineNo!=6;++lineNo)
     {

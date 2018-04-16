@@ -29,45 +29,54 @@ class Ui_multTableFrm
 {
 public:
     QGridLayout *gridLayout;
+    QTableView *tbTableInfo;
     QHBoxLayout *horizontalLayout;
-    QPushButton *pushButton;
-    QPushButton *pushButton_2;
+    QPushButton *pbtnFront;
+    QPushButton *pbtnNext;
     QLabel *label_2;
-    QLineEdit *lineEdit;
+    QLineEdit *lneJump;
     QLabel *label_3;
     QPushButton *pushButton_3;
     QSpacerItem *horizontalSpacer;
-    QTableView *tbTableInfo;
     QLabel *label;
 
     void setupUi(QWidget *multTableFrm)
     {
         if (multTableFrm->objectName().isEmpty())
             multTableFrm->setObjectName(QStringLiteral("multTableFrm"));
-        multTableFrm->resize(400, 300);
+        multTableFrm->resize(628, 362);
         gridLayout = new QGridLayout(multTableFrm);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        tbTableInfo = new QTableView(multTableFrm);
+        tbTableInfo->setObjectName(QStringLiteral("tbTableInfo"));
+        tbTableInfo->setMinimumSize(QSize(0, 0));
+        tbTableInfo->setStyleSheet(QStringLiteral(""));
+        tbTableInfo->setSortingEnabled(true);
+
+        gridLayout->addWidget(tbTableInfo, 0, 0, 1, 1);
+
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        pushButton = new QPushButton(multTableFrm);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
+        pbtnFront = new QPushButton(multTableFrm);
+        pbtnFront->setObjectName(QStringLiteral("pbtnFront"));
 
-        horizontalLayout->addWidget(pushButton);
+        horizontalLayout->addWidget(pbtnFront);
 
-        pushButton_2 = new QPushButton(multTableFrm);
-        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
+        pbtnNext = new QPushButton(multTableFrm);
+        pbtnNext->setObjectName(QStringLiteral("pbtnNext"));
 
-        horizontalLayout->addWidget(pushButton_2);
+        horizontalLayout->addWidget(pbtnNext);
 
         label_2 = new QLabel(multTableFrm);
         label_2->setObjectName(QStringLiteral("label_2"));
 
         horizontalLayout->addWidget(label_2);
 
-        lineEdit = new QLineEdit(multTableFrm);
-        lineEdit->setObjectName(QStringLiteral("lineEdit"));
+        lneJump = new QLineEdit(multTableFrm);
+        lneJump->setObjectName(QStringLiteral("lneJump"));
+        lneJump->setMaximumSize(QSize(100, 16777215));
 
-        horizontalLayout->addWidget(lineEdit);
+        horizontalLayout->addWidget(lneJump);
 
         label_3 = new QLabel(multTableFrm);
         label_3->setObjectName(QStringLiteral("label_3"));
@@ -83,22 +92,13 @@ public:
 
         horizontalLayout->addItem(horizontalSpacer);
 
-
-        gridLayout->addLayout(horizontalLayout, 0, 0, 1, 1);
-
-        tbTableInfo = new QTableView(multTableFrm);
-        tbTableInfo->setObjectName(QStringLiteral("tbTableInfo"));
-        tbTableInfo->setMinimumSize(QSize(0, 0));
-        tbTableInfo->setStyleSheet(QString::fromUtf8("font: 75 12pt \"\346\245\267\344\275\223\";\n"
-"background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(129, 131, 21, 255), stop:0.463277 rgba(129, 170, 80, 255), stop:1 rgba(255, 255, 255, 255));"));
-        tbTableInfo->setSortingEnabled(true);
-
-        gridLayout->addWidget(tbTableInfo, 1, 0, 1, 1);
-
         label = new QLabel(multTableFrm);
         label->setObjectName(QStringLiteral("label"));
 
-        gridLayout->addWidget(label, 2, 0, 1, 1);
+        horizontalLayout->addWidget(label);
+
+
+        gridLayout->addLayout(horizontalLayout, 1, 0, 1, 1);
 
 
         retranslateUi(multTableFrm);
@@ -109,8 +109,8 @@ public:
     void retranslateUi(QWidget *multTableFrm)
     {
         multTableFrm->setWindowTitle(QApplication::translate("multTableFrm", "Form", 0));
-        pushButton->setText(QApplication::translate("multTableFrm", "\345\211\215\344\270\200\351\241\265", 0));
-        pushButton_2->setText(QApplication::translate("multTableFrm", "\345\220\216\344\270\200\351\241\265", 0));
+        pbtnFront->setText(QApplication::translate("multTableFrm", "\345\211\215\344\270\200\351\241\265", 0));
+        pbtnNext->setText(QApplication::translate("multTableFrm", "\345\220\216\344\270\200\351\241\265", 0));
         label_2->setText(QApplication::translate("multTableFrm", "\350\275\254\345\210\260\347\254\254", 0));
         label_3->setText(QApplication::translate("multTableFrm", "\351\241\265", 0));
         pushButton_3->setText(QApplication::translate("multTableFrm", "Go", 0));

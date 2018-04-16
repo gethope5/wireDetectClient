@@ -8,19 +8,36 @@
 
 
 /*another database class */
-QString MeasureDB::detailDataTb=QString("debugMeasure");
-QString MeasureDB::mysqlDetailDataTb=QString("detailinfo0514");
-QString MeasureDB::mysqlDeviceInfoTb=QString("deviecestaturs0514");
+QString MeasureDB::mysql_wireDetailTable=QString("wireDetectCd");
+QString MeasureDB::mysqlDeviceInfoTb=QString("deviceInfo");
+QString MeasureDB::mysql_bDetailTable=QString("bDetectKm");
 
 
-QString MeasureDB::deviceInfoTb=QString("deviecestaturs0514");
-QString MeasureDB::detailDataTitle=QString::fromWCharArray(L"ID1,时间1,设备号1,线路号1,电压1,电流1,温度1,湿度1");
-QString MeasureDB::overDataTitle=QString::fromWCharArray(L"ID1,时间1,里程(m)1,公里标(Km)1,站区1,杆号1,轨距0,超高0,拉出值1,导高1,拉出值10,导高10");
-QString MeasureDB::detectDataTitle=QString::fromWCharArray(L"ID0,时间1,设备编号1,线路名1,电压(V)1,电流(A)1,温度1,湿度1");
-QString MeasureDB::deviceInfoTitle=QString::fromWCharArray(L"ID0,设备编号1,设备线路1,所属路局1,安装位置1,安装时间0,添加时间0,线路11,线路21,线路31,线路41,线路51,线路61,电池电量0,温度0,湿度0,更新时间0");
+QString MeasureDB::local_wireDetailName=QString("wireDetect");
+QString MeasureDB::local_wireDetailTitle=QString::fromWCharArray(L"ID0,时间1,设备号1,线路号1,电压1,电流1,温度1,湿度1");
+QString MeasureDB::local_wireDetailField=QString::fromWCharArray(L"id,tm,deviceNo,lineNo,voltage,current,temperature,humidity");
+
+QString MeasureDB::local_bDetailName=QString::fromWCharArray(L"bDetect");
+QString MeasureDB::local_bDetailTitle=QString::fromWCharArray(L"ID0,时间1,设备号1,B1(mm)1,B2(mm)1,环境温度(°C)0,湿度(%)1,设备电压(V)1,集中器电压(V)0,环境湿度(%)0,温度(°C)1,备注1");
+QString MeasureDB::local_bDetailField=QString::fromWCharArray(L"id,tm,deviceNo,b1,b2,temperature,temperatureIn,voltage,voltage2,humidity,humidityIn,remark");
+
+
+QString MeasureDB::local_deviceInfoName=QString("deviceInfoCd");
+// 1    2       3         4          5             6         7         8     9     10    11    12    13    14
+//"ID,deviceNO,deviceType,department,tableName,localPosition,installTm,line1,line2,line3,line4,line5,line6,remark"
+//1
+//                                                            1 2        3          4          5             6         7     8     9     10    11    12
+QString MeasureDB::local_deviceInfoField=QString::fromWCharArray(L"ID,deviceNO,deviceType,department,localPosition,installTm,line1,line2,line3,line4,line5,line6");
+//                                                           1  2       3   4       5      6       7    8    9    10    11   12
+QString MeasureDB::local_deviceInfoTitle=QString::fromWCharArray(L"ID0,设备编号1,类型1,所属路局1,安装位置1,安装时间1,线路10,线路20,线路30,线路40,线路50,线路60");
+QString MeasureDB::local_deviceInfoFilter="deviceNO in('0400020002')";
+QString MeasureDB::curDepartment=QString::fromWCharArray(L"昆明供电段");//本地数据库详细数据表格tbTableInfo
+DETECT_TYPE MeasureDB::curDetect=WIRE_TYPE;
 MeasureDB::MeasureDB(const QString& dbName)
 {
     QSqlError err;
+    initialType= QPair<QString,DETECT_TYPE>("",NO_TYPE);
+    readConfig();
     m_db = QSqlDatabase::addDatabase("QSQLITE", "mdb_connection");
     m_db.setDatabaseName(dbName);
     //    m_db.set
@@ -35,6 +52,48 @@ MeasureDB::MeasureDB(const QString& dbName)
         qDebug()<<"measure db is opened,create table status="<<createTable();
     }
     curDataName=dbName;
+}
+void MeasureDB::readConfig(void)
+{
+    QSettings  settings("Config.ini", QSettings::IniFormat);
+
+    QString tmp=settings.value("par/devices","").toString();
+    QString tmpDepartment=settings.value("par/local","").toString();
+
+    if(!tmp.isNull())
+    {
+        tmp.replace('/',',');
+        local_deviceInfoFilter=QString("deviceNO in(%1)").arg(tmp);
+    }
+    if(!tmpDepartment.isNull())
+    {
+        initialType.first=QString::fromWCharArray(L"电屏铠");
+        if(tmpDepartment.contains("kunming"))
+        {
+            curDepartment=QString::fromWCharArray(L"昆明供电段");
+            initialType.first= QString::fromWCharArray(L"B值");
+            initialType.second=B_TYPE;
+        }
+        else if(tmpDepartment.contains("chengdu"))
+        {
+            curDepartment=QString::fromWCharArray(L"成都供电段");
+            mysql_wireDetailTable="wireDetectCd";
+            initialType.second=WIRE_TYPE;
+        }
+        else if(tmpDepartment.contains("qingdao"))
+        {
+            curDepartment=QString::fromWCharArray(L"青岛供电段");
+            mysql_wireDetailTable="wireDetectQd";
+            initialType.second=WIRE_TYPE;
+        }
+        else if(tmpDepartment.contains("dalian"))
+        {
+            curDepartment=QString::fromWCharArray(L"大连供电段");
+            mysql_wireDetailTable="detailinfo0514";
+            initialType.second=WIRE_TYPE;
+        }
+    }
+    qDebug()<<"cur device filter="<<local_deviceInfoFilter<<curDepartment<<tmp<<"dd"<<tmpDepartment;
 }
 void MeasureDB::isOpenDB(void)
 {
@@ -51,12 +110,30 @@ bool MeasureDB::createTable(void)
 {    
     isOpenDB();
     QSqlQuery query(m_db);
-    QString str1=QString("CREATE TABLE %1(id long UNIQUE ,tm varchar(30),deviceNo varchar(30),lineNo int,voltage float,current float, temperature float, humidity float)").arg(detailDataTb);
-    QString str2=QString("CREATE TABLE %1(ID integer,deviceNo varchar(30),deviceAddr varchar(30),department varchar(30),position varchar(30),installTm varchar(30),addTm varchar(30),line1 varchar(30),line2 varchar(30),line3 varchar(30),line4 varchar(30),line5 varchar(30),line6 varchar(30),remainCell int,temperature float,humidity float,recentTmUpdate varchar(30))").arg(deviceInfoTb);
+    //"ID,deviceNO,deviceType,department,tableName,localPosition,installTm,line1,line2,line3,line4,line5,line6,remark"
 
-//    qDebug()<<"sql str2="<<str2;
+    QString strWireSql=QString("CREATE TABLE %1(id long UNIQUE ,tm varchar(30),deviceNo varchar(30),lineNo int,voltage float,current float, temperature float, humidity float)").arg(local_wireDetailName);
+    QString strDeviceInfoSql=QString("CREATE TABLE %1"\
+                                     "(ID integer UNIQUE,deviceNO varchar(30),"\
+                                     "deviceType varchar(30),department varchar(30),"\
+                                     "tableName varchar(30),localPosition varchar(30),"\
+                                     "installTm varchar(30),line1 varchar(30),line2 varchar(30),line3 varchar(30),"\
+                                     "line4 varchar(30),line5 varchar(30),line6 varchar(30),"
+                                     "remark varchar(30))").arg(local_deviceInfoName);
+    QString strBSql=QString("CREATE TABLE %1"\
+                            "(id integer UNIQUE,tm varchar(30),deviceNO varchar(30),"\
+                            "b1 float,b2 float,"\
+                            "temperature float,temperatureIn float,"\
+                            "voltage float,voltage2 float,humidity float,humidityIn float,"\
+                            "remark varchar(30))").arg(local_bDetailName);
+
+    bool b1=query.exec(strWireSql);
+    bool b2=query.exec(strDeviceInfoSql);
+    bool b3=query.exec(strBSql);
+    //    qDebug()<<"sql str2="<<str2;
     //    isCloseDB();
-    return query.exec(str1)&query.exec(str2);
+    //    qDebug()<<"create detail"<<b1<<"create devcie "<<b2<<"devcie sql="<<str2;
+    return b1&b2&b3;
 }
 void MeasureDB::Transaction(void)
 {
@@ -82,10 +159,10 @@ QSqlDatabase MeasureDB::currDatabase(void)
 {
     return m_db;
 }
-bool MeasureDB::insert_detailRecord(detailRecord &record)
+bool MeasureDB::insert_wireDetailRecord(detailRecord &record)
 {
     QSqlQuery query(m_db);
-    QString strSql=QString("insert into %1(id,tm,deviceNo,lineNo,voltage,current,temperature,humidity) values(%2,'%3','%4',%5,%6,%7,%8,%9)").arg(detailDataTb)
+    QString strSql=QString("insert into %1(id,tm,deviceNo,lineNo,voltage,current,temperature,humidity) values(%2,'%3','%4',%5,%6,%7,%8,%9)").arg(local_wireDetailName)
             .arg(record.id)
             .arg(record.tm)
             .arg(record.deviceNo)
@@ -97,18 +174,36 @@ bool MeasureDB::insert_detailRecord(detailRecord &record)
     //    qDebug()<<"data"<<strSql;
     return query.exec(strSql);
 }
+bool MeasureDB::insert_bDetailRecord(B_Data &curBValue)
+{
+    QSqlQuery query(m_db);
+    bool bFlag=false;
+    QString strSql=QString("insert into %11 (tm,deviceNo,b1,b2,temperature,temperatureIn,voltage,voltage2,humidity,humidityIn,remark,id) "\
+                           "values (\'%12\',\'%1\',%2,%3,%4,%5,%6,%7,%8,%9,\'%10\',%13)")
+            .arg(curBValue.deviceNo).arg(curBValue.b1).arg(curBValue.b2).arg(curBValue.temperature).arg(curBValue.temperatureIn)
+            .arg(curBValue.voltage).arg(curBValue.voltage2).arg(curBValue.humidity).arg(curBValue.humidityIn).arg("")
+            .arg(local_bDetailName).arg(curBValue.tm).arg(curBValue.id);
+    bFlag=query.exec(strSql);
+    //    qDebug()<<"insert data"<<strSql<<bFlag;
+
+    return query.exec(strSql);
+}
 //函数功能：获取本地数据库的记录数，true,获取详细数据的记录数;false,获取设备数据的记录数
-long MeasureDB::recordCount(bool flag)
+long MeasureDB::recordCount(DETECT_TYPE flag)
 {
     QSqlQuery query(m_db);
     QString strSql;
-    if(flag)
+    if(flag==WIRE_TYPE)
     {
-        strSql=QString("select count(*) from %1").arg(detailDataTb);
+        strSql=QString("select count(*) from %1").arg(local_wireDetailName);
     }
-    else
+    else if(flag==B_TYPE)
     {
-        strSql=QString("select count(*) from %1").arg(deviceInfoTb);
+        strSql=QString("select count(*) from %1").arg(local_bDetailName);
+    }
+    else if(flag==DEVICE_INFO)
+    {
+        strSql=QString("select count(*) from %1").arg(local_deviceInfoName);
     }
     if(query.exec(strSql))
     {
@@ -122,36 +217,39 @@ long MeasureDB::recordCount(bool flag)
     else
         return 0;
 }
-bool MeasureDB::insert_deviceInfoRecord(deviceInfo &record)
+//函数功能：将远程数据库中的设备信息同步至本地数据库中的设备信息表格，通过ID号是否一致判别是否更新
+bool MeasureDB::updateDeviceInfo(QSqlDatabase mysql_db)
 {
+    if(!mysql_db.isOpen())
+        return false;
     QSqlQuery query(m_db);
-#if 1
-    QString strSql=QString("insert into %1(id,deviceNo,deviceAddr,department,position,line1,line2,line3,line4,line5,line6) values(%2,'%3','%4','%5','%6','%7','%8','%9','%10','%11','%12')")
-            .arg(deviceInfoTb)
-            .arg(record.id)
-            .arg(record.deviceNo)
-            .arg(record.deviceAddr)
-            .arg(record.department)
-            .arg(record.position)
-            .arg(record.line1)
-            .arg(record.line2)
-            .arg(record.line3)
-            .arg(record.line4)
-            .arg(record.line5)
-            .arg(record.line6);
-#else
-    QString strSql=QString("insert into %1(id,deviceNo,line1,line2,line3,line4,line5,line6,deviceAddr) values(%2,'%3','%4','%5','%6','%7','%8','%9','%10')")
-            .arg(deviceInfoTb)
-            .arg(record.id)
-            .arg(record.deviceNo)
-            .arg(record.line1)
-            .arg(record.line2)
-            .arg(record.line3)
-            .arg(record.line4)
-            .arg(record.line5)
-            .arg(record.line6)
-            .arg(record.deviceAddr);
-#endif
-//    qDebug()<<"insert device info,sql str="<<strSql;
-    return query.exec(strSql);
+    QSqlQuery query1(mysql_db);
+    QString strMysql=QString("select ID,deviceNO,deviceType,department,tableName,"\
+                             "localPosition,installTm,line1,line2,line3,line4,"\
+                             "line5,line6,remark from %1").arg(mysqlDeviceInfoTb);
+    //    qDebug()<<"mysql sql"<<strMysql;
+    if(query1.exec(strMysql))
+    {
+        while(query1.next())
+        {
+            QString tmp="";
+            for(int i=1;i<14;i++)
+            {
+                tmp+=QString("\'%1\',").arg(query1.value(i).toString());
+            }
+            tmp=tmp.left(tmp.count()-1);
+            QString strInsertSql=QString("insert into %1(ID,deviceNO,deviceType,department,tableName,"\
+                                         "localPosition,installTm,line1,line2,line3,line4,line5,line6,remark"\
+                                         ") values(%2,%3)").arg(local_deviceInfoName).arg(query1.value(0).toString()).arg(tmp);
+
+            //              qDebug()<<"insert sql"<<strInsertSql<<
+            query.exec(strInsertSql);
+        }
+        return true;
+    }
+    else
+    {
+        qDebug()<<"get mysql db is error";
+        return false;
+    }
 }
