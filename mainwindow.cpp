@@ -233,7 +233,7 @@ void MainWindow::uiInitial(void)
     //    ui->statusbar->addPermanentWidget(updateRecordStatus);
 
     ui->startDate->setDate(QDate::currentDate().addDays(-2));
-    ui->endDate->setDateTime(QDateTime::currentDateTime());
+    ui->endDate->setDate(QDate::currentDate().addDays(1));
 
     timer=new QTimer (this);
     connect(timer,SIGNAL(timeout()),this,SLOT(slot_updateData()));
@@ -343,7 +343,9 @@ void MainWindow::uiInitial(void)
     ui->pbtnCurve->setText("");
     ui->pbtnCurve->setFlat(true);
 
-    this->setWindowFlags(Qt::FramelessWindowHint);//去掉标题栏
+//    this->setWindowFlags(Qt::FramelessWindowHint);//去掉标题栏
+    ui->pbtnExit->setVisible(false);
+    ui->pbtnMin->setVisible(false);
     this->setWindowState(Qt::WindowMaximized);//
     ui->tabWidget->setCurrentWidget(ui->tabTable);
 #if 0
@@ -933,7 +935,7 @@ void MainWindow::on_cmbDeviceType_activated(const QString &arg1)
 }
 void MainWindow::setUI(QString arg1)
 {
-    if(arg1.contains(QString::fromWCharArray(L"电屏铠")))
+    if(arg1.contains(QString::fromWCharArray(L"电")))
     {
         ui->cb1->setText(QString::fromWCharArray(L"线路1"));
         ui->cb2->setText(QString::fromWCharArray(L"线路2"));
@@ -959,7 +961,7 @@ void MainWindow::setUI(QString arg1)
     }
     else if(arg1.contains(QString::fromWCharArray(L"B值")))
     {
-        ui->cb1->setText(QString::fromWCharArray(L"承力索B值"));
+        ui->cb1->setText(QString::fromWCharArray(L"接触线B值"));
         ui->cb2->setText(QString::fromWCharArray(L"承力索B值"));
         ui->cb3->setText(QString::fromWCharArray(L"环境温度"));
 

@@ -18,7 +18,7 @@ QString MeasureDB::local_wireDetailTitle=QString::fromWCharArray(L"ID0,时间1,�
 QString MeasureDB::local_wireDetailField=QString::fromWCharArray(L"id,tm,deviceNo,lineNo,voltage,current,temperature,humidity");
 
 QString MeasureDB::local_bDetailName=QString::fromWCharArray(L"bDetect");
-QString MeasureDB::local_bDetailTitle=QString::fromWCharArray(L"ID0,时间1,设备号1,B1(mm)1,B2(mm)1,环境温度(°C)0,湿度(%)1,设备电压(V)1,集中器电压(V)0,环境湿度(%)0,温度(°C)1,备注1");
+QString MeasureDB::local_bDetailTitle=QString::fromWCharArray(L"ID0,时间1,设备号1,导B(mm)1,承B(mm)1,环境温度(°C)0,湿度(%)1,设备电压(V)1,集中器电压(V)0,环境湿度(%)0,温度(°C)1,备注1");
 QString MeasureDB::local_bDetailField=QString::fromWCharArray(L"id,tm,deviceNo,b1,b2,temperature,temperatureIn,voltage,voltage2,humidity,humidityIn,remark");
 
 
@@ -67,7 +67,7 @@ void MeasureDB::readConfig(void)
     }
     if(!tmpDepartment.isNull())
     {
-        initialType.first=QString::fromWCharArray(L"电屏铠");
+        initialType.first=QString::fromWCharArray(L"电缆在线监测系统");
         if(tmpDepartment.contains("kunming"))
         {
             curDepartment=QString::fromWCharArray(L"昆明供电段");

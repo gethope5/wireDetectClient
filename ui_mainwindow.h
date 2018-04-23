@@ -109,13 +109,13 @@ public:
         widget_2->setStyleSheet(QStringLiteral("background-color: rgb(0, 85, 127);"));
         label = new QLabel(widget_2);
         label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(1000, 30, 531, 51));
+        label->setGeometry(QRect(20, 50, 531, 51));
         label->setStyleSheet(QString::fromUtf8("color: rgb(255, 255, 255);\n"
-"font: 750 24pt  \"\345\276\256\350\275\257\351\233\205\351\273\221\";\n"
+"font: 750 16pt  \"\345\276\256\350\275\257\351\233\205\351\273\221\";\n"
 ""));
         label_2 = new QLabel(widget_2);
         label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setGeometry(QRect(20, 30, 531, 51));
+        label_2->setGeometry(QRect(20, 10, 461, 51));
         label_2->setStyleSheet(QString::fromUtf8("color:rgb(0, 255, 0);\n"
 "font: 750 24pt  \"\345\276\256\350\275\257\351\233\205\351\273\221\";\n"
 ""));
@@ -429,7 +429,7 @@ public:
         cb1->setText(QApplication::translate("MainWindow", "\347\272\277\350\267\2571", 0));
         cb4->setText(QApplication::translate("MainWindow", "\347\272\277\350\267\2574", 0));
         cb6->setText(QApplication::translate("MainWindow", "\347\272\277\350\267\2576", 0));
-        label_16->setText(QApplication::translate("MainWindow", "\350\256\276\345\244\207\347\261\273\345\236\213", 0));
+        label_16->setText(QApplication::translate("MainWindow", "\350\256\276\345\244\207\344\275\215\347\275\256", 0));
         label_17->setText(QApplication::translate("MainWindow", "\346\233\262\347\272\277\346\230\276\347\244\272", 0));
         pbtnCurve->setText(QApplication::translate("MainWindow", "\345\210\267\346\226\260", 0));
         tabWidget->setTabText(tabWidget->indexOf(tabCurve), QApplication::translate("MainWindow", "\346\243\200\346\265\213\346\233\262\347\272\277", 0));

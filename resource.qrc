@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>images/bk.jpg</file>
+        <file>images/btnBk.png</file>
+        <file>images/lableBk.png</file>
+        <file>images/lableBk.jpg</file>
+        <file>images/setBtnBk.jpg</file>
+        <file>images/bk3.jpg</file>
+        <file>images/fuck.jpg</file>
+        <file>images/company.png</file>
+        <file>images/splash.jpg</file>
+        <file>images/dataTable.png</file>
+        <file>images/device.png</file>
+        <file>images/errorData.png</file>
+        <file>images/update.png</file>
+    </qresource>
+</RCC>
