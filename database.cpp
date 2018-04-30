@@ -285,8 +285,8 @@ long MeasureDB::recordCount(DETECT_TYPE flag)
     QString strSql;
     if(flag==WIRE_TYPE)
     {
-//        strSql=QString("select count(*) from %1").arg(local_wireDetailName);
-        strSql=QString("select id from %1 order by id").arg(local_wireDetailName);
+        strSql=QString("select count(*) from %1").arg(local_wireDetailName);
+//        strSql=QString("select id from %1 order by id").arg(local_wireDetailName);
 
     }
     else if(flag==B_TYPE)
@@ -306,7 +306,7 @@ long MeasureDB::recordCount(DETECT_TYPE flag)
     if(b)
     {
         long count=0;
-#if 0
+#if 1
         while(query.next())
         {
             count=query.value(0).toLongLong();
