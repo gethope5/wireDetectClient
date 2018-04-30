@@ -295,6 +295,41 @@ font: 750 24pt  &quot;微软雅黑&quot;;
           </size>
          </property>
          <layout class="QGridLayout" name="gridLayout_7">
+          <item row="3" column="0">
+           <widget class="HoverBitmapBtn" name="pbtnClear">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>75</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="text">
+             <string>清空数据</string>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="0">
            <widget class="HoverBitmapBtn" name="pbtnUpdate">
             <property name="sizePolicy">

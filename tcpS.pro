@@ -9,8 +9,9 @@ QT       += network
 QT       += sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
-TARGET = tcpS-V1.2-0227
+TARGET = tcpS-V1.3-0416
 TEMPLATE = app
+#CONFIG+=console
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
@@ -30,11 +31,12 @@ SOURCES += main.cpp\
     subexcelsave.cpp \
     mysqlmodel.cpp \
     mainwindow.cpp \
-    raillinesqlmodel.cpp \
+#    raillinesqlmodel.cpp \
     logindlg.cpp \
     database.cpp \
     devicestatus.cpp \
-    multtablefrm.cpp
+    multtablefrm.cpp \
+    hoverbitmapbtn.cpp
 
 HEADERS  += \
     cdevicemanager.h \
@@ -42,11 +44,12 @@ HEADERS  += \
     subexcelsave.h \
     mysqlmodel.h \
     mainwindow.h \
-    raillinesqlmodel.h \
+#    raillinesqlmodel.h \
     logindlg.h \
     database.h \
     devicestatus.h \
-    multtablefrm.h
+    multtablefrm.h \
+    hoverbitmapbtn.h
 
 FORMS    += \
     cdevicemanager.ui \

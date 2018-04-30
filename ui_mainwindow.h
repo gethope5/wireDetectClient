@@ -54,6 +54,7 @@ public:
     QLabel *lblOverUnit;
     QWidget *widget;
     QGridLayout *gridLayout_7;
+    HoverBitmapBtn *pbtnClear;
     HoverBitmapBtn *pbtnUpdate;
     HoverBitmapBtn *pbtnDataFilter;
     QWidget *widget_4;
@@ -191,11 +192,22 @@ public:
         widget->setMinimumSize(QSize(120, 0));
         gridLayout_7 = new QGridLayout(widget);
         gridLayout_7->setObjectName(QStringLiteral("gridLayout_7"));
-        pbtnUpdate = new HoverBitmapBtn(widget);
-        pbtnUpdate->setObjectName(QStringLiteral("pbtnUpdate"));
+        pbtnClear = new HoverBitmapBtn(widget);
+        pbtnClear->setObjectName(QStringLiteral("pbtnClear"));
         QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy2.setHorizontalStretch(0);
         sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(pbtnClear->sizePolicy().hasHeightForWidth());
+        pbtnClear->setSizePolicy(sizePolicy2);
+        pbtnClear->setMinimumSize(QSize(100, 40));
+        pbtnClear->setMaximumSize(QSize(75, 16777215));
+        pbtnClear->setFont(font1);
+        pbtnClear->setStyleSheet(QStringLiteral(""));
+
+        gridLayout_7->addWidget(pbtnClear, 3, 0, 1, 1);
+
+        pbtnUpdate = new HoverBitmapBtn(widget);
+        pbtnUpdate->setObjectName(QStringLiteral("pbtnUpdate"));
         sizePolicy2.setHeightForWidth(pbtnUpdate->sizePolicy().hasHeightForWidth());
         pbtnUpdate->setSizePolicy(sizePolicy2);
         pbtnUpdate->setMinimumSize(QSize(100, 40));
@@ -415,6 +427,7 @@ public:
         label_15->setText(QApplication::translate("MainWindow", "\350\256\276\345\244\207\347\261\273\345\236\213", 0));
         lblOver->setText(QApplication::translate("MainWindow", "\350\266\205\351\231\220\346\240\207\345\207\206", 0));
         lblOverUnit->setText(QApplication::translate("MainWindow", "A", 0));
+        pbtnClear->setText(QApplication::translate("MainWindow", "\346\270\205\347\251\272\346\225\260\346\215\256", 0));
         pbtnUpdate->setText(QApplication::translate("MainWindow", "\345\210\267\346\226\260", 0));
         pbtnDataFilter->setText(QApplication::translate("MainWindow", "\346\237\245\350\257\242", 0));
         label_20->setText(QApplication::translate("MainWindow", "\350\265\267\345\247\213\346\227\266\351\227\264", 0));

@@ -8,7 +8,7 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
-struct  detailRecord
+struct  wire_data
 {
     long id;
     QString tm;         //2时间
@@ -47,17 +47,41 @@ struct B_Data
         package=0;
     }
 };
+struct current_Data
+{
+    long id;            //1
+    QString tm;         //2
+    QString deviceNo;   //3
+    float t1;           //4
+    float h1;           //5
+    float v1;           //6
+    float current;      //7
+    float t2;           //8
+    float h2;           //9
+    float tmp1;         //10
+    float tmp2;         //11
+    QString remark;     //12
+    char package;
+};
+struct device_management
+{
+    int id;
+    QString local;
+    QString remark;
+    QString curDeviceID;
+};
 enum DETECT_TYPE
 {
     WIRE_TYPE=1,
     B_TYPE=2,
     DEVICE_INFO=3,
+    CURRENT_TYPE=5,
     NO_TYPE=4
 };
 class MeasureDB
 {
 public:
-    MeasureDB(const QString& dbName);
+    MeasureDB(const QString& dbName,QSqlDatabase &mysql);
     ~MeasureDB();
     bool createTable(void);
     void Transaction(void);
@@ -74,30 +98,46 @@ public:
     static QString local_bDetailTitle;
     static QString local_bDetailField;
 
+
+    static QString local_currentDetailName;
+    static QString local_currentDetailTitle;
+    static QString local_currentDetailField;
+
+
     static QString local_deviceInfoName;//本地数据库设备信息表格
     static QString local_deviceInfoTitle;
     static QString local_deviceInfoField;
     static QString local_deviceInfoFilter;
 
-
+    static QString local_devcieManagementName;
+    static QString local_devcieManagementField;
+    static QPair<QStringList,QStringList> local_curManagementDevices;//用户管理表格中的local和curDeviceID顺次对应存入该对象
 
     static QString mysql_wireDetailTable;
     static QString mysql_bDetailTable;
-
+    static QString mysql_currentTable;
+    static QString mysql_deviceManagementTb;
     static QString mysqlDeviceInfoTb;
-    static QString curDepartment;//本地数据库详细数据表格tbTableInfo
-    static DETECT_TYPE curDetect;
-    bool insert_wireDetailRecord(detailRecord &record);
-    bool insert_bDetailRecord(B_Data &record);
 
+    static DETECT_TYPE curDetect;
+    int curManagementIndex;
+    bool insert_wireDetailRecord(wire_data &record);
+    bool insert_bDetailRecord(B_Data &record);
+    bool insert_managementRecord(device_management &record);
     //    bool insert_deviceInfoRecord(deviceInfo &record);
-    bool updateDeviceInfo(QSqlDatabase mm);
-    long recordCount(DETECT_TYPE f=WIRE_TYPE);
-    QPair<QString,DETECT_TYPE> initialType;
+    bool updateDeviceInfo(void);
+    bool updateUserManagement(void );
+    long recordCount(DETECT_TYPE f);
+    void deleteAllData(void);
+    void readConfig(void);
+    void updateBDetailRecord(long localCount);
+    void updateWireDetailRecord(long localCount);
+    void updateCurrentDetailRecord(long localCount);
+    bool insert_currentDetailRecord(current_Data &record);
 private:
 
     QSqlDatabase m_db;
-    void readConfig(void);
+    QSqlDatabase m_mysql;
 };
 
 #endif

@@ -10,19 +10,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     readConfigure();
     uiInitial();
-    localDb =new MeasureDB("./wireDetectDb.db");
-    if(localDb)
-    {
-        initialViewDb();
-    }
     connect2MysqlDb();
     curveInitial();
+
+    localDb =new MeasureDB("./wireDetectDb.db",db_mysql);
+    localDb->updateDeviceInfo();
     slot_updateData();
-}
-void MainWindow::initialViewDb(void)
-{
-    QSqlDatabase md=localDb->currDatabase();
-    //    ui->wdgTable->setDateBase(md,MeasureDB::local_wireDetailName);
 }
 //函数功能：
 void MainWindow::readConfigure(void)
@@ -45,15 +38,15 @@ void MainWindow::setConfigure(void)
     QSettings  settings("Config.ini", QSettings::IniFormat);
     settings.setValue("par/constAlarm", ui->lnbOverValue->text().toFloat());
 }
-//函数功能：更新设备类型
+//函数功能：根据本地数据库，更新设备类型，并填写到界面设备类型的组合框之中
 void MainWindow::updateDeviceType(void)
 {
     QSqlQuery query(localDb->currDatabase());
     //    qDebug()<<"db status"<<db_mysql.isOpen();
 
-    QString strSql=QString("Select distinct deviceType from %1  where department =\'%2\'")
-            .arg(MeasureDB::local_deviceInfoName).arg(MeasureDB::curDepartment);
-    qDebug()<<"device type s "<<strSql;
+    QString strSql=QString("Select distinct deviceType from %1 where %2")
+            .arg(MeasureDB::local_deviceInfoName).arg(MeasureDB::local_deviceInfoFilter);
+    qDebug()<<"update device type, s "<<strSql;
     if(query.exec(strSql))
     {
         ui->cmbDeviceType->clear();
@@ -65,22 +58,23 @@ void MainWindow::updateDeviceType(void)
     }
     updateDeviceLocal();
 }
-//函数功能:获取满足特定设备类型及设备所属路局条件下的所有设备对应的位置
+//函数功能:根据当前用户数据及界面设备类型的选择，更新曲线绘制界面的设备信息(用不同位置进行同类型设备的区分)
 void MainWindow::updateDeviceLocal(void)
 {
     QSqlQuery query(localDb->currDatabase());
-    QString strSql=QString("Select distinct localPosition from %1  where department =\'%2\' and deviceType=\'%3\'")
+    QString strSql=QString("Select distinct localPosition from %1  where deviceType=\'%2\' and %3")
             .arg(MeasureDB::local_deviceInfoName)
-            .arg(MeasureDB::curDepartment)
-            .arg(ui->cmbDeviceType->currentText());
+            .arg(ui->cmbDeviceType->currentText())
+            .arg(MeasureDB::local_deviceInfoFilter);
     if(query.exec(strSql))
     {
         ui->cmbDeviceNo->clear();
-        qDebug()<<"update device number ok,sql"<<strSql;
+        //qDebug()<<"update device number ok,sql"<<strSql;
         while(query.next())
         {
             ui->cmbDeviceNo->addItem(query.value(0).toString());
         }
+        //        qDebug()<<"cur type"<<ui->cmbDeviceType->currentText()<<"number=";
     }
     else
     {
@@ -91,7 +85,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
 void MainWindow::curveInitial(void)
 {
     //设置曲线颜色
@@ -343,11 +336,12 @@ void MainWindow::uiInitial(void)
     ui->pbtnCurve->setText("");
     ui->pbtnCurve->setFlat(true);
 
-//    this->setWindowFlags(Qt::FramelessWindowHint);//去掉标题栏
+    //    this->setWindowFlags(Qt::FramelessWindowHint);//去掉标题栏
     ui->pbtnExit->setVisible(false);
     ui->pbtnMin->setVisible(false);
     this->setWindowState(Qt::WindowMaximized);//
     ui->tabWidget->setCurrentWidget(ui->tabTable);
+    ui->pbtnClear->setVisible(false);
 #if 0
     ui->lblLine->setAlignment(Qt::AlignRight);
     ui->cmbLine->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
@@ -406,7 +400,7 @@ void MainWindow::DeleteDeviece(qint16 no)
                 qDebug()<<QString::fromWCharArray(L"删除设备成功");
             }
         }
-        updateAllTable();
+        showAllTable();
     }
     else
     {
@@ -443,7 +437,7 @@ QString MainWindow::getDeviceNO(QString localPosition)
     bool bflag=query.exec(strSql);
     if(bflag)
     {
-        qDebug()<<"devcie NO. ok,str="<<strSql<<bflag;
+        //        qDebug()<<"devcie NO. ok,str="<<strSql<<bflag;
         while(query.next())
         {
             QString mm=query.value(0).toString();
@@ -461,8 +455,7 @@ QString MainWindow::getDeviceNO(QString localPosition)
 }
 void MainWindow::DrawCurve()
 {
-#if 1
-    QString tmp("");
+    QString tmp("");//包含了设备信息和时间的筛选条件
 
     for(int i=0;i<CURVE_NUMBERS;i++)
         curveInfos[i].clear();
@@ -475,42 +468,49 @@ void MainWindow::DrawCurve()
         return;
     }
 
-    tmp=QString(" tm between '%1%' and '\%2\' and deviceNO=\'%3\'")
+    tmp=QString("(tm between '%1%' and '\%2%\' )and deviceNO=\'%3\'")
             .arg(ui->startDate->dateTime().toString("yyyy-MM-dd")).arg(ui->endDate->dateTime().toString("yyyy-MM-dd"))
             .arg(deviceNo);
 
     QString strSql;
-    if(curType.second==WIRE_TYPE)
+    if(MeasureDB::curDetect==WIRE_TYPE)
     {
         strSql=QString("select lineNo,tm,current from %1 where %2 ")
                 .arg(MeasureDB::local_wireDetailName).arg(tmp);
     }
-    else if(curType.second==B_TYPE)
+    else if(MeasureDB::curDetect==B_TYPE)
     {
         strSql=QString("select tm,b1,b2,humidityIn from %1 where %2 ")
                 .arg(MeasureDB::local_bDetailName).arg(tmp);
     }
-    QSqlQuery query(localDb->currDatabase());
-    if(query.exec(strSql))
+    else if(MeasureDB::curDetect==CURRENT_TYPE)
     {
-        qDebug()<<"curve data ok,sql"<<strSql;
-        if(curType.second==WIRE_TYPE)
+        strSql=QString("select tm,current from %1 where %2 ")
+                .arg(MeasureDB::local_currentDetailName).arg(tmp);
+    }
+    QSqlQuery query(localDb->currDatabase());
+    bool b=query.exec(strSql);
+    if(b)
+    {
+        qDebug()<<"curve data ok,sql"<<strSql<<b;
+        if(MeasureDB::curDetect==WIRE_TYPE)
         {
             while(query.next())
             {
-                //                if(query.value(2).toFloat())
+                if(query.value("current").toFloat())
                 {
                     //                    QDateTime temp = query.value(1).toDateTime();
                     //                    qint32 sCount = temp.time().msecsSinceStartOfDay()/1000;
-                    double sCount = QDateTime::fromString( query.value(1).toString(),"yyyy-MM-dd hh:mm:ss").toTime_t();
+                    double sCount = QDateTime::fromString( query.value("tm").toString(),"yyyy-MM-dd hh:mm:ss").toTime_t();
 
                     //                qDebug()<<"time"<< query.value(1).toString()<<sCount;
-                    int lineNo=query.value(0).toInt()-1;
+                    int lineNo=query.value("lineNo").toInt()-1;
                     //                    qDebug()<<"timer"<<temp<<curveInfos[lineNo].x.count()<<sCount<<query.value(2).toFloat();
+                    //                    qDebug()<<"line no"<<lineNo;
                     if(lineNo<CURVE_NUMBERS)
                     {
                         curveInfos[lineNo].x<<sCount;
-                        curveInfos[lineNo].y<<query.value(2).toFloat();
+                        curveInfos[lineNo].y<<query.value("current").toFloat();
                     }
                     else
                     {
@@ -520,10 +520,12 @@ void MainWindow::DrawCurve()
             }
             for(int i=0;i<CURVE_NUMBERS;i++)
             {
-                drawLine(curveInfos[i]);
+                qDebug()<<"curve data"<<i<<curveInfos[i].x.count()<<curveInfos[i].y.count();
+                if(curveInfos[i].x.count())
+                    drawLine(curveInfos[i]);
             }
         }
-        else if(curType.second==B_TYPE)
+        else if(MeasureDB::curDetect==B_TYPE)
         {
             while(query.next())
             {
@@ -548,83 +550,27 @@ void MainWindow::DrawCurve()
             }
             drawLine(curveBTemperture);
         }
+        else if(MeasureDB::curDetect==CURRENT_TYPE)
+        {
+            while(query.next())
+            {
+                float cur=query.value("current").toFloat();
+                if(cur)
+                {
+                    double sCount = QDateTime::fromString( query.value("tm").toString(),"yyyy-MM-dd hh:mm:ss").toTime_t();
+                    curveInfos[0].x<<sCount;
+                    curveInfos[0].y<<cur;
+                }
+            }
+            drawLine(curveInfos[0]);
+        }
         ui->dataWidget->replot();
+        qDebug()<<"draw curve finish";
     }
     else
     {
         qDebug()<<"curve,data error,sql"<<strSql;
     }
-
-#else
-    QString tmp("");
-    if(!ui->cmbDeviceType->currentText().contains("ALL"))
-    {
-        for(int i=0;i<CURVE_NUMBERS;i++)
-            curveInfos[i].clear();
-
-        if(deviceNos.count())
-        {
-            int curIndex=0;
-            for(int i=0;i<deviceNos.count();i++)
-            {
-                if(deviceNos.at(i).first.contains(ui->cmbDeviceType->currentText()))
-                {
-                    curIndex=i;
-                    break;
-                }
-            }
-            if(ui->cmbLine->currentText().contains("ALL"))
-            {
-                tmp=QString("deviceNo='%1'").arg(deviceNos.at(curIndex).second);
-            }
-            else
-            {
-                tmp=QString("deviceNo='%1'").arg(deviceNos.at(curIndex).second);
-                tmp.append(QString(" and lineNo =%1").arg(ui->cmbLine->currentIndex()));
-            }
-
-            tmp.append(QString(" and tm like '%1%' ").arg(ui->startDate->dateTime().toString("yyyy-MM-dd")));
-
-
-            QString strSql=QString("select lineNo,tm,current from %1 where %2").arg(MeasureDB::local_wireDetailName).arg(tmp);
-            QSqlQuery query(localDb->currDatabase());
-            qDebug()<<"string sql"<<strSql<<ui->startDate->dateTime().toString("yy-MM-dd")<<ui->endDate->dateTime().toString("yy-MM-dd");
-            if(query.exec(strSql))
-            {
-                qDebug()<<"i get the record";
-                while(query.next())
-                {
-                    if(query.value(2).toFloat())
-                    {
-                        QDateTime temp = query.value(1).toDateTime();
-                        qint32 sCount = temp.time().msecsSinceStartOfDay()/1000;
-                        int lineNo=query.value(0).toInt()-1;
-                        //                    qDebug()<<"timer"<<temp<<curveInfos[lineNo].x.count()<<sCount<<query.value(2).toFloat();
-                        if(lineNo<CURVE_NUMBERS)
-                        {
-                            curveInfos[lineNo].x<<sCount;
-                            curveInfos[lineNo].y<<query.value(2).toFloat();
-                        }
-                        else
-                        {
-                            qDebug()<<"line index is out of memory";
-                        }
-                    }
-                }
-            }
-            for(int i=0;i<CURVE_NUMBERS;i++)
-            {
-                //            if(curveInfos[i].y.count())
-                ui->dataWidget->graph(curveInfos[i].curveIndex)->setData(curveInfos[i].x,curveInfos[i].y);
-            }
-            ui->dataWidget->replot();
-        }
-        else
-        {
-            qDebug()<<"device number is null";
-        }
-    }
-#endif
 }
 void MainWindow::connect2MysqlDb()
 {
@@ -671,19 +617,27 @@ void MainWindow::showTable( QTableView *tableview,QString filter)
     QString tableName;
     if(tableview==ui->wdgTable->tableView||tableview==ui->wdgOver->tableView)
     {
-        if(curType.second==WIRE_TYPE)
+        if(MeasureDB::curDetect==WIRE_TYPE)
         {
             QPair<QString,QString> tmp =getShowTableInfo(MeasureDB::local_wireDetailField,MeasureDB::local_wireDetailTitle);
             field=tmp.first;
             title=tmp.second;
             tableName=MeasureDB::local_wireDetailName;
         }
-        else if(curType.second==B_TYPE)
+        else if(MeasureDB::curDetect==B_TYPE)
         {
             QPair<QString,QString> tmp =getShowTableInfo(MeasureDB::local_bDetailField,MeasureDB::local_bDetailTitle);
             field=tmp.first;
             title=tmp.second;
             tableName=MeasureDB::local_bDetailName;
+        }
+        else if(MeasureDB::curDetect==CURRENT_TYPE)
+        {
+            QPair<QString,QString> tmp =getShowTableInfo(MeasureDB::local_currentDetailField,MeasureDB::local_currentDetailTitle);
+            field=tmp.first;
+            title=tmp.second;
+            tableName=MeasureDB::local_currentDetailName;
+            qDebug()<<"cur table,current";
         }
     }
     else if(tableview==ui->tbTableInfo)
@@ -720,7 +674,7 @@ void MainWindow::showTable( QTableView *tableview,QString filter)
         queryModel->fetchMore();
     tableview->setModel(queryModel);
     if(tmIndex!=-1)
-        tableview->setColumnWidth(tmIndex,130);
+        tableview->setColumnWidth(tmIndex,200);
 }
 QPair<QString,QString> MainWindow::getShowTableInfo(QString field,QString title)
 {
@@ -816,12 +770,13 @@ void MainWindow::on_pbtnDataFilter_clicked()
     {
         setCursor(QCursor(Qt::WaitCursor));
         updateDeviceLocal();
-        updateAllTable();
+        showAllTable();
         DrawCurve();
         setConfigure();
         setCursor(QCursor(Qt::ArrowCursor));
     }
 }
+//函数功能：根据界面设置，获取筛选条件
 QString MainWindow::getStrFilter(void)
 {
     QString strFilter("");
@@ -868,22 +823,22 @@ void MainWindow::slot_lineCurve(void)
     {
         if(ui->cb3->checkState()==Qt::Checked	)
         {
-            if(curType.second==WIRE_TYPE)
+            if(MeasureDB::curDetect==WIRE_TYPE)
             {
                 ui->dataWidget->graph(curveInfos[2].curveIndex)->setVisible(false);
             }
-            else if(curType.second==B_TYPE)
+            else if(MeasureDB::curDetect==B_TYPE)
             {
                 ui->dataWidget->graph(curveBTemperture.curveIndex)->setVisible(false);
             }
         }
         else
         {
-            if(curType.second==WIRE_TYPE)
+            if(MeasureDB::curDetect==WIRE_TYPE)
             {
                 ui->dataWidget->graph(curveInfos[2].curveIndex)->setVisible(true);
             }
-            else if(curType.second==B_TYPE)
+            else if(MeasureDB::curDetect==B_TYPE)
             {
                 ui->dataWidget->graph(curveBTemperture.curveIndex)->setVisible(true);
             }
@@ -935,7 +890,7 @@ void MainWindow::on_cmbDeviceType_activated(const QString &arg1)
 }
 void MainWindow::setUI(QString arg1)
 {
-    if(arg1.contains(QString::fromWCharArray(L"电")))
+    if(arg1.contains(QString::fromWCharArray(L"电缆"))||arg1.contains(QString::fromWCharArray(L"电屏铠")))
     {
         ui->cb1->setText(QString::fromWCharArray(L"线路1"));
         ui->cb2->setText(QString::fromWCharArray(L"线路2"));
@@ -957,7 +912,7 @@ void MainWindow::setUI(QString arg1)
         ui->dataWidget->yAxis2->setTickLabels(false);
         MeasureDB::local_deviceInfoTitle=QString::fromWCharArray(L"ID0,设备编号1,类型1,所属路局1,安装位置1,安装时间1,线路11,线路21,线路31,线路41,线路51,线路61");
         ui->lnbOverValue->setText("1");
-        curType=QPair<QString,DETECT_TYPE>(arg1,WIRE_TYPE);
+        MeasureDB::curDetect=WIRE_TYPE;
     }
     else if(arg1.contains(QString::fromWCharArray(L"B值")))
     {
@@ -981,11 +936,38 @@ void MainWindow::setUI(QString arg1)
 
         MeasureDB::local_deviceInfoTitle=QString::fromWCharArray(L"ID0,设备编号1,类型1,所属路局1,安装位置1,安装时间1,线路10,线路20,线路30,线路40,线路50,线路60");
         ui->lnbOverValue->setText("2200");
-        curType=QPair<QString,DETECT_TYPE>(arg1,B_TYPE);
+        MeasureDB::curDetect=B_TYPE;
     }
-    qDebug()<<"cur axis"<<ui->dataWidget->yAxis->label()<<ui->dataWidget->yAxis2->label();
+#if 1
+    else if(arg1.contains(QString::fromWCharArray(L"泄漏")))
+    {
+        ui->cb1->setText(QString::fromWCharArray(L"泄漏电流"));
+        ui->cb2->setText(QString::fromWCharArray(L"承力索B值"));
+        ui->cb3->setText(QString::fromWCharArray(L"环境温度"));
+
+        ui->cb1->setVisible(true);
+        ui->cb2->setVisible(false);
+        ui->cb3->setVisible(false);
+        ui->cb4->setVisible(false);
+        ui->cb5->setVisible(false);
+        ui->cb6->setVisible(false);
+        ui->lblOverUnit->setText("A");
+        ui->dataWidget->yAxis->setLabel(QString::fromWCharArray(L"电流"));
+        //        ui->dataWidget->yAxis2->setLabel(QString::fromWCharArray(L"温度"));
+        ui->dataWidget->yAxis2->setTickLabels(false);
+        //        ui->dataWidget->yAxis2->setRange(0,100);
+        ui->dataWidget->yAxis->setRange(500,2500);
+        ui->dataWidget->yAxis2->setTicks(false);
+
+        MeasureDB::local_deviceInfoTitle=QString::fromWCharArray(L"ID0,设备编号1,类型1,所属路局1,安装位置1,安装时间1,线路10,线路20,线路30,线路40,线路50,线路60");
+        ui->lnbOverValue->setText("1");
+        MeasureDB::curDetect=CURRENT_TYPE;
+    }
+#endif
+    //    qDebug()<<"cur axis"<<ui->dataWidget->yAxis->label()<<ui->dataWidget->yAxis2->label();
     update();
 }
+//函数功能：根据设备类型，统计当前设备类型条件下，远程数据库的记录总数；db_mysql失效不会导致系统崩溃
 long MainWindow::mysql_recordCount(DETECT_TYPE flag)
 {
     if(db_mysql.isOpen())
@@ -1005,6 +987,11 @@ long MainWindow::mysql_recordCount(DETECT_TYPE flag)
         {
             strSql=QString("select count(*) from %1").arg(MeasureDB::mysqlDeviceInfoTb);
         }
+        else if(flag==CURRENT_TYPE)
+        {
+            strSql=QString("select count(*) from %1").arg(MeasureDB::mysql_currentTable);
+        }
+        qDebug()<<"update remote db,sql"<<strSql;
         if(query.exec(strSql))
         {
             long count=0;
@@ -1018,14 +1005,14 @@ long MainWindow::mysql_recordCount(DETECT_TYPE flag)
             return 0;
     }
     else
-        return 0;
+        return -1;
 }
 //函数功能：更新数据,将远程传感器数据同步到本地数据库.type,用于选择同步的传感器类型
 long MainWindow::updateDatabase(DETECT_TYPE type )
 {
     long localCount=localDb->recordCount(type);
     long remoteCount=mysql_recordCount(type);
-    //    qDebug()<<"+++++++++++++++++++++++++++++";
+    qDebug()<<"+++++++++++++++++++++++++++++"<<localCount<<remoteCount<<type;
 
     lblLocalRecordCounts->setText(QString::fromWCharArray(L"数据记录: %1 条 ").arg(localCount));
     if(localCount<remoteCount)
@@ -1036,11 +1023,15 @@ long MainWindow::updateDatabase(DETECT_TYPE type )
 
         if(type==WIRE_TYPE)
         {
-            updateWireDetailRecord(localCount);
+            localDb-> updateWireDetailRecord(localCount);
         }
         else if(type==B_TYPE)
         {
-            updateBDetailRecord(localCount);
+            localDb->updateBDetailRecord(localCount);
+        }
+        else if(type==CURRENT_TYPE)
+        {
+            localDb->updateCurrentDetailRecord(localCount);
         }
         //更新数据条数
         lblLocalRecordCounts->setText(QString::fromWCharArray(L"当前数据条数: %1").arg(localDb->recordCount(type)));
@@ -1049,117 +1040,52 @@ long MainWindow::updateDatabase(DETECT_TYPE type )
     else
         return 0;
 }
-void  MainWindow::updateBDetailRecord(long localCount)
-{
-    QSqlQuery query(db_mysql);
-    QString strSql;
-    bool bflag=false;
-    //                      0 1  2        3  4  5           6             7       8        9        10         11
-    strSql=QString("select id,tm,deviceNo,b1,b2,temperature,temperatureIn,voltage,voltage2,humidity,humidityIn,remark from %1 where id>%2")
-            .arg(MeasureDB::mysql_bDetailTable).arg(localCount);
-
-    bflag=query.exec(strSql);
-    qDebug()<<"b value,sql"<<strSql<<bflag;
-    if(bflag)
-    {
-        db_mysql.transaction();
-        localDb->Transaction();
-        while(query.next())
-        {
-
-            //detail table
-            B_Data dd;
-            dd.id=query.value(0).toLongLong();
-            dd.tm=query.value(1).toString();
-            dd.deviceNo=query.value(2).toString();
-            dd.b1=query.value(3).toFloat();
-            dd.b2=query.value(4).toFloat();
-            dd.temperature=query.value(5).toFloat();
-            dd.temperatureIn=query.value(6).toFloat();
-            dd.voltage=query.value(7).toFloat();
-            dd.voltage2=query.value(8).toFloat();
-            dd.humidity=query.value(9).toFloat();
-            dd.humidityIn=query.value(10).toFloat();
-            dd.remark=query.value(11).toString();
-            localDb->insert_bDetailRecord(dd);
-        }
-        localDb->Commit();
-        db_mysql.commit();
-    }
-}
-void MainWindow::updateWireDetailRecord(long localCount)
-{
-    QSqlQuery query(db_mysql);
-    QString strSql;
-
-    strSql=QString("select id,tm,deviceNo,lineNo,voltage,current,temperature,humidity from %1 where id>%2").arg(MeasureDB::mysql_wireDetailTable).arg(localCount);
-    if(query.exec(strSql))
-    {
-        db_mysql.transaction();
-        localDb->Transaction();
-        while(query.next())
-        {
-
-            //detail table
-            detailRecord dd;
-            dd.id=query.value(0).toLongLong();
-            dd.tm=query.value(1).toString();
-            dd.deviceNo=query.value(2).toString();
-            dd.lineNo=query.value(3).toInt();
-            dd.voltage=query.value(4).toFloat();
-            dd.current=query.value(5).toFloat();
-            dd.temperature=query.value(6).toFloat();
-            dd.humidty=query.value(7).toFloat();
-            localDb->insert_wireDetailRecord(dd);
-        }
-        localDb->Commit();
-        db_mysql.commit();
-    }
-}
 void MainWindow::slot_updateData(void)
 {
 
     //    updateDeviceType();
     //    qDebug()<<"first show,begin----------------------------------";
-    //    updateDatabase(curType.second);
-    //    updateAllTable();
-    localDb->updateDeviceInfo(db_mysql);
+    //    updateDatabase(MeasureDB::curDetect.second);
+    //    showAllTable();
+    localDb->updateDeviceInfo();
+    localDb->updateUserManagement();
     //    qDebug()<<"first show,end----------------------------------";
     QTime cc;
     cc.start();
-    this->statusBar()->showMessage(curType.first+" "+QString::fromWCharArray(L"数据刷新中..."));
-    qDebug()<<"update data...";
+    this->statusBar()->showMessage(ui->cmbDeviceType->currentText()+" "+QString::fromWCharArray(L"数据刷新中..."));
+    qDebug()<<"update data..."<<MeasureDB::curDetect;
     updateDeviceType();
-    long updateCount=updateDatabase(curType.second);
-    updateAllTable();
+    long updateCount=updateDatabase(MeasureDB::curDetect);
+    showAllTable();
     ui->statusbar->showMessage(QString::fromWCharArray(L"数据更新：%1 条,时间:%2,%3")
                                .arg(updateCount)
                                .arg(QDateTime::currentDateTime().toString("yyyy-MM-dd-hh-mm-ss"))
                                .arg(cc.elapsed()));
     DrawCurve();
 }
-void MainWindow::updateAllTable(void)
+//函数功能：更新显示所有表格
+void MainWindow::showAllTable(void)
 {
     QString strFilter=getStrFilter();
     QString over;
     if(strFilter.isNull())
     {
-        if(curType.second==WIRE_TYPE)
+        if(MeasureDB::curDetect==WIRE_TYPE||MeasureDB::curDetect==CURRENT_TYPE)
         {
             over=QString("current >%1").arg(ui->lnbOverValue->text());
         }
-        else if(curType.second==B_TYPE)
+        else if(MeasureDB::curDetect==B_TYPE)
         {
             over=QString("b1>%1 or b2>%2 ").arg(ui->lnbOverValue->text()).arg(ui->lnbOverValue->text());
         }
     }
     else
     {
-        if(curType.second==WIRE_TYPE)
+        if(MeasureDB::curDetect==WIRE_TYPE||MeasureDB::curDetect==CURRENT_TYPE)
         {
             over=QString("%1 and current >%2").arg(strFilter).arg(ui->lnbOverValue->text());
         }
-        else if(curType.second==B_TYPE)
+        else if(MeasureDB::curDetect==B_TYPE)
         {
             over=QString("%1 and (b1>%2 or b2>%3 )").arg(strFilter).arg(ui->lnbOverValue->text()).arg(ui->lnbOverValue->text());
         }
@@ -1227,4 +1153,9 @@ void MainWindow::resizeEvent(QResizeEvent *)
 void MainWindow::on_pbtnMin_clicked()
 {
     setWindowState(Qt::WindowMinimized);
+}
+
+void MainWindow::on_pbtnClear_clicked()
+{
+    localDb->deleteAllData();
 }

@@ -22,6 +22,7 @@
 #define pbtn_height 80
 #define CURVE_NUMBERS 6
 #define B_CURVE_NUMBERS 2
+#define DEPARTMENT 0
 #define debug_UI 0
 struct curveInfo
 {
@@ -69,7 +70,7 @@ private:
     QSqlDatabase db_mysql;
     CDeviceManager* manager;
     int nIndex;
-    QTimer *timer;
+    QTimer *timer;                   //设置数据更新时间间隔
     void updateDeviceType(void);
     QVector<QPair<int,QVector<QString> > > lineNos;
     curveInfo curveInfos[CURVE_NUMBERS];
@@ -82,7 +83,6 @@ private:
     DeviceStatus *remoteDbStatus;
     QLabel *lblLocalRecordCounts;
     int updateInterval;
-    void initialViewDb(void);
     QPushButton *pbtnOver;//超限
     QPushButton *pbtnTable;//表格
     QPushButton *pbtnDevice;//设备信息
@@ -96,10 +96,9 @@ private:
     void updateWireDetailRecord(long localCount);
     void updateBDetailRecord(long localCount);
     void setUI(QString arg1);
-    QPair<QString,DETECT_TYPE> curType;
     QPair<QString,QString> getShowTableInfo(QString field,QString title);
     QString getStrFilter(void);
-    void updateAllTable(void);
+    void showAllTable(void);
     void resizeEvent(QResizeEvent *);
 private slots:
     void slot_updateData(void);
@@ -115,6 +114,7 @@ private slots:
     void on_pbtnUpdate_clicked();
     void on_pbtnExit_clicked();
     void on_pbtnMin_clicked();
+    void on_pbtnClear_clicked();
 };
 
 #endif // MAINWINDOW_H

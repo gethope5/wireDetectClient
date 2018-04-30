@@ -25,5 +25,4 @@ private:
     QString showField;
     QString tableTitle;
 };
-
 #endif // MULTTABLEFRM_H
